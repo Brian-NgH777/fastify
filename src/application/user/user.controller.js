@@ -19,8 +19,14 @@ module.exports = async function (fastify) {
             }
         },
         preHandler: [],
-        handler: async (req, reply) => { 
-            return userBusinesses.findUsers(req);
+        handler: async (req, reply) => {
+          console.log("req.mongoose.modelsreq.mongoose.modelsreq.mongoose.models", fastify.mongoose.models);
+          const { User } = req.mongoose.models;
+          let dataReturned = await User.findOne({
+            "username": 'transybao3'
+          }).select('username');
+          return dataReturned;
+            // return userBusinesses.findUsers(req);
         }
     })
 }

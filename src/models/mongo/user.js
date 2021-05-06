@@ -18,5 +18,5 @@ const UserSchema = new Schema({
     //   favs:  Number
     // }
 });
-// module.exports = mongoose.model('User', UserSchema)
-mongoose.model('User', UserSchema)
+ module.exports = mongoose.model('User', UserSchema)
+// mongoose.model('User', UserSchema)

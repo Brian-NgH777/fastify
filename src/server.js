@@ -1,7 +1,7 @@
 const fastify = require('fastify')({ logger: true });
 require('dotenv').config();
 const {
-    // mongooseConnect,
+    mongooseConnect,
     sequelizeConnect
 } = require('./db/connect');
 const system = require('./system');
@@ -11,10 +11,9 @@ fastify.setErrorHandler(function (error, request, reply) {
     reply.status(error.statusCode).send({ message: error.message })
 })
 
-switch (process.env.DB_Engine) {
-    case 'mongodb':
-        let mongoose = mongooseConnect();
-        fastify.decorateRequest('mongo', mongoose);
+switch (process.env.DB_ENGINE) {
+    case 'mongo':
+        fastify.decorate('mongoose', mongooseConnect());
     case 'postgres':
         sequelizeConnect().sequelize.sync();
         fastify.decorateRequest('pg', sequelizeConnect());

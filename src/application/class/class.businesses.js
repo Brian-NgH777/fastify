@@ -1,6 +1,3 @@
-const {
-    sequelizeConnect
-} = require('../../db/connect');
 class ClassBusinesses {
     async findClasses(req) {
         return await req.pg.Class.findAll({});
