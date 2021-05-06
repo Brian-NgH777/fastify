@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Class = sequelize.define("class", {
+    const Class = sequelize.define("Class", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,7 +12,8 @@ module.exports = (sequelize, Sequelize) => {
       name: {
         type: Sequelize.STRING
       }
+    },{
+      tableName: 'Class'
     });
-  
     return Class;
   };

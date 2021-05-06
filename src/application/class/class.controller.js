@@ -6,9 +6,9 @@ module.exports = async function (fastify) {
         method: 'GET',
         url: '/class',
         schema: {},
-        preHandler: routerMiddleware,
+        // preHandler: routerMiddleware,
         handler: async (req, reply) => { 
-            return classBusinesses.findClasses(req);
+            return await classBusinesses.findClasses(req);
         }
     })
     fastify.route({

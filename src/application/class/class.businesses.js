@@ -1,17 +1,18 @@
-const db = require('../../db/connect');
-
+const {
+    sequelizeConnect
+} = require('../../db/connect');
 class ClassBusinesses {
-    async findClasses() {
-        return await db.Class.findAll({});
+    async findClasses(req) {
+        return await req.pg.Class.findAll({});
     }
 
-    async createClass() {
+    async createClass(req) {
         const data = {
             description: "adsdsd",
             name: "aaa"
         };
         
-        return await db.Class.create(data)
+        return await req.pg.Class.create(data)
     }
 }
 

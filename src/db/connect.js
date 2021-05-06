@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { Sequelize } = require('sequelize');
 const { development } = require('./config/config');
 const mongoose = require('mongoose');
@@ -22,25 +24,28 @@ const sequelizeConnect = () => {
         console.error('Unable to connect to the database:', err);
     });
     
-    
     const db = {};
-    
-    db.Sequelize = Sequelize;
-    db.sequelize = sequelize;
-    
-    db.Class = require("../application/class/class.model")(sequelize, Sequelize);
-    db.User = require("../application/user/user.model")(sequelize, Sequelize);
-    return db;
-}
+    let dirname = path.join(__dirname, '../models/sequelize')
+    fs
+    .readdirSync(dirname)
+    .filter(file => {
+      return (file.indexOf('.') !== 0) && (file.slice(-3) === '.js');
+    })
+    .forEach(file => {
+      const model = require(path.join(dirname, file))(sequelize, Sequelize.DataTypes);
+      db[model.name] = model;
+    });
 
-const mongodbConnect = () => {
-    return {
-        // force to close the mongodb connection when app stopped
-        // the default value is false
-        forceClose: true,
-        name: 'MONGO1',
-        url: 'mongodb+srv://transybao93:GRnKRZJpnvwNSatR@singapore-sandbox.tjkg3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-    };
+    Object.keys(db).forEach(modelName => {
+        if (db[modelName].associate) {
+        db[modelName].associate(db);
+        }
+    });
+    
+    db.sequelize = sequelize;
+    db.Sequelize = Sequelize;
+    
+    return db;
 }
 
 const mongooseConnect = () => {
@@ -80,6 +85,5 @@ const mongooseConnect = () => {
 
 module.exports = {
     sequelizeConnect,
-    mongodbConnect,
     mongooseConnect
 };
