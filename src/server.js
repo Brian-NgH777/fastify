@@ -1,13 +1,20 @@
 const fastify = require('fastify')({ logger: true });
 require('dotenv').config();
-const db = require('./db/connect');
+const {
+    mongooseConnect
+} = require('./db/connect');
 const system = require('./system');
 const router = require('./router');
 
 fastify.setErrorHandler(function (error, request, reply) {
     reply.status(error.statusCode).send({ message: error.message })
 })
-db.sequelize.sync();
+
+//- init mongoose
+let mongoose = mongooseConnect();
+//- add to fastify decorator
+fastify.decorate('mongoose', mongoose);
+
 fastify.register(system)
 fastify.register(router)
 
