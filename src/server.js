@@ -1,23 +1,27 @@
+'use strict'
 const fastify = require('fastify')({ logger: true });
 require('dotenv').config();
 const {
-    mongooseConnect,
-    sequelizeConnect
+    mongooseConnect
+    // sequelizeConnect
 } = require('./db/connect');
 const system = require('./system');
 const router = require('./router');
 
+if (process.env.DB_ENGINE === "mongo") {
+    let mongoose = mongooseConnect();
+    fastify.decorate('mongoose', mongoose);
+}
+
+// if (process.env.DB_ENGINE === "postgres") {
+//     let sequelizeC = sequelizeConnect()
+//     fastify.decorateRequest('pg', sequelizeC);
+//     sequelizeC.sequelize.sync();
+// }
+
 fastify.setErrorHandler(function (error, request, reply) {
     reply.status(error.statusCode).send({ message: error.message })
 })
-
-switch (process.env.DB_ENGINE) {
-    case 'mongo':
-        fastify.decorate('mongoose', mongooseConnect());
-    case 'postgres':
-        sequelizeConnect().sequelize.sync();
-        fastify.decorateRequest('pg', sequelizeConnect());
-}
 
 fastify.register(system)
 fastify.register(router)

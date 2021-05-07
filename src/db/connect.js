@@ -1,8 +1,8 @@
+const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { Sequelize } = require('sequelize');
 const { development } = require('./config/config');
-const mongoose = require('mongoose');
 
 const sequelizeConnect = () => {
     const sequelize = new Sequelize(development.database, development.username, development.password, {
@@ -80,6 +80,8 @@ const mongooseConnect = () => {
         console.info('Database disconnected...');
         // logger.info('Database disconnected...');
     });
+
+    // mongoose.model('UserDetail', require('../models/mongo/userDetail'));
     return mongoose;
 }
 
